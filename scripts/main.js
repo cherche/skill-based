@@ -27,19 +27,23 @@ function generate (type) {
 
   return {
     dice,
-    [type]: base10
+    [type]: {
+      base6,
+      base10
+    }
   }
 }
 
 function replace (stock) {
-  if (stock && stock.value && stock.value > 0) return stock
+  if (stock && stock.value && stock.value.base10 > 0) return stock
   else return generate('value')
 }
 
 function change (stock) {
   const updated = generate('change')
+  updated.value = {}
 
-  updated.value = stock.value + updated.change
+  updated.value.base10 = stock.value.base10 + updated.change.base10
 
   return updated
 }
@@ -52,7 +56,6 @@ function all (stocks, fn) {
 
 all(stocks, replace)
 
-let phases = 0
 function phase () {
-  phases++
+  all(stocks, change)
 }
